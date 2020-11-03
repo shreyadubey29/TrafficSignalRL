@@ -17,7 +17,7 @@ class TrafficGenerator:
         np.random.seed(seed)
 
         # car generation is as per normal distribution
-        timings = np.random.normal(5000, 1200, self.n_cars_generated)
+        timings = np.random.normal(250, 80, self.n_cars_generated)
         timings = np.sort(timings)
 
         car_gen_steps = []

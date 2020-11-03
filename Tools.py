@@ -22,10 +22,8 @@ def set_sumo(gui, sumocfg_file, max_steps):
         sys.exit("Please declare environment variable 'SUMO_HOME'")
 
     if gui == 0:
-        print("inside gui = False")
         sumoBinary = checkBinary("sumo")
     else:
-        print("inside gui = True")
         sumoBinary = checkBinary("sumo-gui")
 
     sumo_cmd = [
@@ -54,6 +52,7 @@ def set_config(config_file):
     parameters["green_duration"] = int(config.get("simulation", "green_duration"))
     parameters["yellow_duration"] = int(config.get("simulation", "yellow_duration"))
     parameters["epochs"] = int(config.get("simulation", "epochs"))
+    parameters["seed"] = int(config.get("simulation", "seed"))
     parameters["memory_size_min"] = int(config.get("memory", "memory_size_min"))
     parameters["memory_size_max"] = int(config.get("memory", "memory_size_max"))
     parameters["num_states"] = int(config.get("agent", "num_states"))
@@ -63,6 +62,7 @@ def set_config(config_file):
     parameters["learning_rate"] = float(config.get("agent", "learning_rate"))
     parameters["models_path_name"] = config.get("dir", "models_path_name")
     parameters["sumocfg_file_name"] = config.get("dir", "sumocfg_file_name")
+    parameters["test_model_path"] = config.get("dir", "test_model_path")
 
     return parameters
 

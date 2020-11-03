@@ -3,13 +3,17 @@
 Neural network model for getting action for current state
 """
 import numpy as np
-import keras    
+import keras
 from keras import layers, losses, optimizers, Input
 from keras.utils import plot_model
+from keras.models import load_model
 import os
+import sys
 from datetime import datetime
 import warnings
+
 warnings.filterwarnings("ignore")
+
 
 class TrainingModel:
     def __init__(self, input_dim, output_dim, batch_size, learning_rate):
@@ -52,20 +56,37 @@ class TrainingModel:
     def train_model(self, input_states, target_q_s_a):
 
         # train the model
-        self.model.fit(input_states, target_q_s_a, epochs=10, verbose=0)
+        self.model.fit(input_states, target_q_s_a, epochs=1, verbose=0)
 
     def save_model(self, path):
-        
+
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         # Save the current model
-        self.model.save(
-            os.path.join(
-                path, "trained_model_" + timestamp + ".h5"
-            )
-        )
+        self.model.save(os.path.join(path, "trained_model.h5"))
+
+
 #        plot_model(
 #            self.model,
 #            to_file=os.path.join(path, "model_" + timestamp + ".png"),
 #            show_shapes=True,
 #            show_layer_names=True,
 #        )
+
+
+class TestModel:
+    def __init__(self, input_dim, model_path):
+        self.input_dim = input_dim
+        self.model = self.load_trained_model(model_path)
+
+    def load_trained_model(self, model_path):
+        model_file_path = os.path.join(model_path, "trained_model.h5")
+
+        if os.path.isfile(model_file_path):
+            loaded_model = load_model(model_file_path)
+            return loaded_model
+        else:
+            sys.exit("Model not found")
+
+    def predict_single(self, state):
+        state = np.reshape(state, [1, self.input_dim])
+        return self.model.predict(state)
