@@ -5,10 +5,10 @@ Code for running simulation for the traffic signal by the RL agent
 import numpy as np
 import traci
 import timeit
-import datetime
 import random
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 """
@@ -69,9 +69,7 @@ class Simulation:
         """
         This function will run one episode and then it will start the training for the agent
         """
-        #start_time = datetime.datetime.now()
         start_time = timeit.default_timer()
-        #start_time_str = start_time.strftime("%Y%m%d_%H%M%S")
 
         # setup sumo
         self.Traffic_gen.create_route(episode)
@@ -88,7 +86,7 @@ class Simulation:
         old_action = -1
 
         while self.step_count < self.max_steps:
-        
+
             # get current state
             current_state = self.get_state()
 
@@ -118,11 +116,10 @@ class Simulation:
             old_total_wait_time = current_total_wait
 
             self.episode_reward = self.episode_reward + reward
-            self.step_count  = self.step_count + 1
 
         # save episode stats
         self.save_episode_stats()
-        print("Total reward:", reward, "| Epsilon: ", round(epsilon, 2))
+        print("Total reward:", self.episode_reward, "| Epsilon: ", round(epsilon, 2))
         traci.close()
         simulation_time = round(timeit.default_timer() - start_time, 1)
 
@@ -232,7 +229,7 @@ class Simulation:
 
     def get_queue_length(self):
         """
-        Calculate the toatl number of cars at speed = 0 in each incoming lane
+        Calculate the total number of cars at speed = 0 in each incoming lane
         """
         N_lane = traci.edge.getLastStepHaltingNumber("N2TL")
         S_lane = traci.edge.getLastStepHaltingNumber("S2TL")
@@ -282,7 +279,7 @@ class Simulation:
         return total_waiting_time
 
     def replay(self):
-        """
+        """`
         Get samples from memory and then use them to update the learning equation and then train
         """
         batch = self.Memory.get_samples(self.Model.batch_size)
