@@ -6,6 +6,7 @@ from Memory import Memory
 from Traffic import TrafficGenerator
 from Simulation import Simulation
 from TestSimulation import TestSimulation
+from BaseSimulation import BaseSimulation
 from datetime import datetime
 from Tools import set_config, set_sumo, save_plot
 import argparse
@@ -18,7 +19,7 @@ warnings.filterwarnings("ignore")
 def main():
     parser = argparse.ArgumentParser(description="model mode")
 
-    parser.add_argument("--mode", "-m", dest="mode", default="2")
+    parser.add_argument("--mode", "-m", dest="mode", default="4")
 
     args = parser.parse_args()
 
@@ -32,6 +33,9 @@ def main():
         print("training and testing")
         train_model()
         test_model()
+    elif args.mode == "4":
+        print("timed signal")
+        base_model()
 
 
 def train_model():
@@ -120,8 +124,6 @@ def test_model():
     model = TestModel(config["num_states"], model_path)
     traffic_gen = TrafficGenerator(config["max_steps"], config["n_cars_generated"])
     
-    print("Make Simulation object")
-    
     simulation = TestSimulation(
         model,
         traffic_gen,
@@ -151,6 +153,55 @@ def test_model():
         "steps",
         "Queue Length",
     )
+    save_plot(
+        test_path,
+        simulation.wait_time_list,
+        "Cumulative wait time",
+        "steps",
+        "Wait time",
+    )
+    print("Average wait time: ", sum(simulation.wait_time_list)/len(simulation.wait_time_list))
+    print("Average quque length: ", sum(simulation.queue_length_list)/len(simulation.queue_length_list))
+    print("Average reward: ", sum(simulation.rewards_list)/len(simulation.rewards_list))
     print("Testing results saved at ", test_path)
+
+def base_model():
+    
+    config = set_config("config_parameters.txt")
+    sumo_cmd = set_sumo(config["gui"], config["sumocfg_file_name"], config["max_steps"])
+    base_path = config["base_model_path"]
+    
+    traffic_gen = TrafficGenerator(config["max_steps"], config["n_cars_generated"])
+    
+    simulation = BaseSimulation(
+        traffic_gen,
+        sumo_cmd,
+        config["max_steps"],
+        config["green_duration"],
+        config["yellow_duration"],
+    )
+
+    print("Base timer episode")
+
+    simulation_time = simulation.run_signal(config["seed"])
+    print("Simulation time: ", simulation_time, "sec")
+
+    save_plot(
+        base_path,
+        simulation.queue_length_list,
+        "queue length",
+        "steps",
+        "Queue Length",
+    )
+    save_plot(
+        base_path,
+        simulation.wait_time_list,
+        "Cumulative wait time",
+        "steps",
+        "Wait time",
+    )
+    print("Average wait time: ", sum(simulation.wait_time_list)/len(simulation.wait_time_list))
+    print("Average quque length: ", sum(simulation.queue_length_list)/len(simulation.queue_length_list))
+    print("Testing results saved at ", base_path)
 
 main()

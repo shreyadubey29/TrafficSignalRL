@@ -63,6 +63,7 @@ def set_config(config_file):
     parameters["models_path_name"] = config.get("dir", "models_path_name")
     parameters["sumocfg_file_name"] = config.get("dir", "sumocfg_file_name")
     parameters["test_model_path"] = config.get("dir", "test_model_path")
+    parameters["base_model_path"] = config.get("dir", "base_model_path")
 
     return parameters
 

@@ -84,6 +84,7 @@ class Simulation:
         old_total_wait_time = 0
         old_state = -1
         old_action = -1
+        num_step = 0
 
         while self.step_count < self.max_steps:
 
@@ -100,7 +101,7 @@ class Simulation:
 
             # choose action based on the current state
             action = self.choose_action(current_state, epsilon)
-
+            
             # check if the action chosen is different from the last action then activate yellow lights
             if self.step_count != 0 and action != old_action:
                 self.activate_yellow_lights(old_action)
@@ -116,6 +117,7 @@ class Simulation:
             old_total_wait_time = current_total_wait
 
             self.episode_reward = self.episode_reward + reward
+            num_step +=1
 
         # save episode stats
         self.save_episode_stats()
@@ -125,6 +127,7 @@ class Simulation:
 
         # now start training
         train_start_time = timeit.default_timer()
+        print("num of steps: ", num_step)
         for e in range(self.epochs):
             self.replay()
 
@@ -140,7 +143,10 @@ class Simulation:
         for car_id in car_list:
             lane_position = traci.vehicle.getLanePosition(car_id)
             lane_id = traci.vehicle.getLaneID(car_id)
-            # manipulating the value so that the nearest car near the traffic light has position 0
+            
+            # manipulating the value so that the nearest car near the 
+            # traffic light has position 0
+
             lane_position = 750 - lane_position
 
             if lane_position < 8:
@@ -195,7 +201,10 @@ class Simulation:
                 valid_car = False
 
             if valid_car:
-                state[car_cell] = 1
+                if state[car_cell] == 0:
+                    state[car_cell] = 1
+                else:
+                    state[car_cell] +=1
 
         return state
 
@@ -209,9 +218,12 @@ class Simulation:
         This function decides if we will explore or exploit in this step
         """
         if random.random() < epsilon:
-            return random.randint(0, self.num_of_actions - 1)
+            action = random.randint(0, self.num_of_actions - 1)
+            #print("random")
         else:
-            return np.argmax(self.Model.predict_single(state))
+            action = np.argmax(self.Model.predict_single(state))
+                
+        return action
 
     def activate_yellow_lights(self, action):
         yellow_code = action * 2 + 1

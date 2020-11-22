@@ -32,13 +32,13 @@ class TrainingModel:
         layer3 = layers.Dense(200, activation="relu")(layer2)
         layer4 = layers.Dense(200, activation="relu")(layer3)
 
-        outputs = layers.Dense(self.output_dim, activation="softmax")(layer4)
+        outputs = layers.Dense(self.output_dim, activation="linear")(layer4)
 
         self.model = keras.Model(inputs=inputs, output=outputs)
 
         # using mean sqaured error loss and Adam optimizer
         self.model.compile(
-            loss=losses.mean_squared_error,
+            loss='mse',
             optimizer=optimizers.Adam(lr=self.learning_rate),
         )
 
@@ -60,7 +60,7 @@ class TrainingModel:
 
     def save_model(self, path):
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        #timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         # Save the current model
         self.model.save(os.path.join(path, "trained_model.h5"))
 
