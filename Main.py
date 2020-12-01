@@ -160,9 +160,9 @@ def test_model():
         "steps",
         "Wait time",
     )
-    print("Average wait time: ", sum(simulation.wait_time_list)/len(simulation.wait_time_list))
-    print("Average quque length: ", sum(simulation.queue_length_list)/len(simulation.queue_length_list))
-    print("Average reward: ", sum(simulation.rewards_list)/len(simulation.rewards_list))
+    print("Average wait time: ", round(sum(simulation.wait_time_list)/len(simulation.wait_time_list),1))
+    print("Average quque length: ", round(sum(simulation.queue_length_list)/len(simulation.queue_length_list),1))
+    print("Average reward: ", round(sum(simulation.rewards_list)/len(simulation.rewards_list),1))
     print("Testing results saved at ", test_path)
 
 def base_model():
@@ -200,8 +200,8 @@ def base_model():
         "steps",
         "Wait time",
     )
-    print("Average wait time: ", sum(simulation.wait_time_list)/len(simulation.wait_time_list))
-    print("Average quque length: ", sum(simulation.queue_length_list)/len(simulation.queue_length_list))
+    print("Average wait time: ", round(sum(simulation.wait_time_list)/len(simulation.wait_time_list),1))
+    print("Average quque length: ", round(sum(simulation.queue_length_list)/len(simulation.queue_length_list),1))
     print("Testing results saved at ", base_path)
 
 main()
