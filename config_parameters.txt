@@ -1,23 +1,26 @@
 [simulation]
-gui = 0
-total_episodes = 1
+gui = 1
+total_episodes = 100
 max_steps = 5000
 n_cars_generated = 1000
 green_duration = 10
-yellow_duration = 5
-epochs = 100
+yellow_duration = 4
+epochs = 500
+seed = 10000
 
 [memory]
-memory_size_min = 500
+memory_size_min = 300
 memory_size_max = 10000
 
 [agent]
 num_states = 80
 num_actions = 4
 gamma = 0.75
-batch_size = 50
+batch_size = 200
 learning_rate = 0.01 
 
 [dir]
 models_path_name = Models
+test_model_path = Test_Model
+base_model_path = Base_Model
 sumocfg_file_name = simulation.sumocfg

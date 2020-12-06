@@ -19,7 +19,7 @@ warnings.filterwarnings("ignore")
 def main():
     parser = argparse.ArgumentParser(description="model mode")
 
-    parser.add_argument("--mode", "-m", dest="mode", default="4")
+    parser.add_argument("--mode", "-m", dest="mode", default="2")
 
     args = parser.parse_args()
 
