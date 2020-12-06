@@ -13,4 +13,4 @@ the number argument represents different things that the main function can do
 #1 - training the DQN model\
 #2 - testing DQN model\
 #3 - training and then testing the DQN model\
-#4 - testing the base model\
+#4 - testing the base model
