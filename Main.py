@@ -15,7 +15,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-
+# main function
 def main():
     parser = argparse.ArgumentParser(description="model mode")
 
@@ -37,7 +37,7 @@ def main():
         print("timed signal")
         base_model()
 
-
+# function to train model
 def train_model():
     config = set_config("config_parameters.txt")
     sumo_cmd = set_sumo(config["gui"], config["sumocfg_file_name"], config["max_steps"])
@@ -87,7 +87,6 @@ def train_model():
         episode += 1
         epsilon = update_epsilon(epsilon, epsilon_min, epsilon_decay)
 
-    # path = r"C:\Users\khare\Desktop\Study\Fall2020\Courses\AI with Reinforcement Learning\Project\Code\Models"
     Model.save_model(path)
     print("End time: ", datetime.now().strftime("%Y%m%d_%H%M%S"))
     print("Model saved at the path: ", path)
@@ -107,13 +106,13 @@ def train_model():
         "Avg queue length",
     )
 
-
+# function for epsilon value update
 def update_epsilon(epsilon, epsilon_min, epsilon_decay):
     if epsilon > epsilon_min:
         epsilon *= epsilon_decay
     return epsilon
 
-
+# function to test the trained DQN model
 def test_model():
 
     config = set_config("config_parameters.txt")
@@ -165,6 +164,7 @@ def test_model():
     print("Average reward: ", round(sum(simulation.rewards_list)/len(simulation.rewards_list),1))
     print("Testing results saved at ", test_path)
 
+# test the pre-timed base model
 def base_model():
     
     config = set_config("config_parameters.txt")

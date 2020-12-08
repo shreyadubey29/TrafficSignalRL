@@ -1,20 +1,17 @@
-# -*- coding: utf-8 -*-
 """
 Neural network model for getting action for current state
 """
 import numpy as np
 import keras
-from keras import layers, losses, optimizers, Input
-from keras.utils import plot_model
+from keras import layers, optimizers, Input
 from keras.models import load_model
 import os
 import sys
-from datetime import datetime
 import warnings
 
 warnings.filterwarnings("ignore")
 
-
+# deep neural network model
 class TrainingModel:
     def __init__(self, input_dim, output_dim, batch_size, learning_rate):
 
@@ -60,19 +57,10 @@ class TrainingModel:
 
     def save_model(self, path):
 
-        #timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         # Save the current model
         self.model.save(os.path.join(path, "trained_model.h5"))
 
-
-#        plot_model(
-#            self.model,
-#            to_file=os.path.join(path, "model_" + timestamp + ".png"),
-#            show_shapes=True,
-#            show_layer_names=True,
-#        )
-
-
+# class for testing the trained model
 class TestModel:
     def __init__(self, input_dim, model_path):
         self.input_dim = input_dim

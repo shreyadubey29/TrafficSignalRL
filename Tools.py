@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
 
+# function to set the sumo tool
 def set_sumo(gui, sumocfg_file, max_steps):
     """
     Set SUMO parameters
@@ -38,7 +39,7 @@ def set_sumo(gui, sumocfg_file, max_steps):
 
     return sumo_cmd
 
-
+# function to read config file
 def set_config(config_file):
     config = configparser.ConfigParser()
     config.read_file(open(config_file))
@@ -67,7 +68,7 @@ def set_config(config_file):
 
     return parameters
 
-
+# function to save observation plots
 def save_plot(path, data, filename, xlabel, ylabel):
 
     plt.plot(data)

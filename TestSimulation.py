@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Code for running simulation for the traffic signal by the RL agent
 """
@@ -159,21 +158,27 @@ class TestSimulation:
             else:
                 # cars that are crossing or have crossed the intersection are not valid
                 valid_car = False
-
+                
             if valid_car:
-                state[car_cell] = 1
+                if state[car_cell] == 0:
+                    state[car_cell] = 1
+                else:
+                    state[car_cell] +=1
 
         return state
 
+    # function to get reward
     def get_reward(self, old_wait_time, current_wait_time):
         reward = 0
         reward = old_wait_time - current_wait_time
         return reward
 
+    # function to start yellow light
     def activate_yellow_lights(self, action):
         yellow_code = action * 2 + 1
         traci.trafficlight.setPhase("TL", yellow_code)
-
+        
+    # function to start green light 
     def activate_green_lights(self, action):
         if action == 0:
             traci.trafficlight.setPhase("TL", NS_GREEN)
@@ -183,7 +188,8 @@ class TestSimulation:
             traci.trafficlight.setPhase("TL", EW_GREEN)
         elif action == 3:
             traci.trafficlight.setPhase("TL", EWL_GREEN)
-
+            
+    # function to get number of cars waiting
     def get_queue_length(self):
         """
         Calculate the total number of cars at speed = 0 in each incoming lane
@@ -195,7 +201,8 @@ class TestSimulation:
 
         total_queue_length = N_lane + S_lane + W_lane + E_lane
         return total_queue_length
-
+    
+    # function to simulate the enviornment on sumo
     def simulate(self, steps_todo):
         """
         Perform steps in sumo
@@ -210,6 +217,7 @@ class TestSimulation:
             queue_length = self.get_queue_length()
             self.queue_length_list.append(queue_length)
 
+    # function to collect cumulative wait time
     def collect_waiting_times(self):
         """
         Get waiting time for every car on the incoming roads
@@ -228,6 +236,7 @@ class TestSimulation:
 
         total_waiting_time = sum(self.waiting_times.values())
         return total_waiting_time
-
+    
+    # function to take action using the trained model
     def choose_test_action(self, state):
         return np.argmax(self.Model.predict_single(state))

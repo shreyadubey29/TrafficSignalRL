@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Code for running simulation for the traffic signal by the RL agent
 """
@@ -207,28 +206,32 @@ class Simulation:
                     state[car_cell] +=1
 
         return state
-
+    
+    # function to get reawwrd value after each step
     def get_reward(self, old_wait_time, current_wait_time):
         reward = 0
         reward = old_wait_time - current_wait_time
         return reward
 
+    # function to choose action
     def choose_action(self, state, epsilon):
         """
         This function decides if we will explore or exploit in this step
         """
         if random.random() < epsilon:
             action = random.randint(0, self.num_of_actions - 1)
-            #print("random")
+            
         else:
             action = np.argmax(self.Model.predict_single(state))
                 
         return action
-
+    
+    # function to start yellow signal
     def activate_yellow_lights(self, action):
         yellow_code = action * 2 + 1
         traci.trafficlight.setPhase("TL", yellow_code)
-
+    
+    # function to start green signal
     def activate_green_lights(self, action):
         if action == 0:
             traci.trafficlight.setPhase("TL", NS_GREEN)
@@ -238,7 +241,8 @@ class Simulation:
             traci.trafficlight.setPhase("TL", EW_GREEN)
         elif action == 3:
             traci.trafficlight.setPhase("TL", EWL_GREEN)
-
+    
+    # function to get the cars waiting
     def get_queue_length(self):
         """
         Calculate the total number of cars at speed = 0 in each incoming lane
@@ -251,11 +255,13 @@ class Simulation:
         total_queue_length = N_lane + S_lane + W_lane + E_lane
         return total_queue_length
 
+    # function to save episode stats
     def save_episode_stats(self):
         self.rewards_list.append(self.episode_reward)
         self.cumulative_wait_time_list.append(self.sum_waiting_time)
         self.average_queue_length_list.append(self.sum_queue_length)
-
+        
+    # function to simulate the environment in sumo
     def simulate(self, steps_todo):
         """
         Perform steps in sumo
@@ -270,7 +276,8 @@ class Simulation:
             queue_length = self.get_queue_length()
             self.sum_queue_length += queue_length
             self.sum_waiting_time += queue_length
-
+            
+    # function to collect cumulative wait time
     def collect_waiting_times(self):
         """
         Get waiting time for every car on the incoming roads
@@ -290,6 +297,7 @@ class Simulation:
         total_waiting_time = sum(self.waiting_times.values())
         return total_waiting_time
 
+    # function to replay the collected experience
     def replay(self):
         """`
         Get samples from memory and then use them to update the learning equation and then train
