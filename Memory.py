@@ -4,12 +4,13 @@ Code for Memory creation and related functions
 """
 import random
 import warnings
+
 warnings.filterwarnings("ignore")
 
 # Memory is the list of samples
 class Memory:
     def __init__(self, min_size, max_size):
-        
+
         self.sample_list = []
         self.min_size = min_size
         self.max_size = max_size

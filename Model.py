@@ -35,7 +35,7 @@ class TrainingModel:
 
         # using mean sqaured error loss and Adam optimizer
         self.model.compile(
-            loss='mse',
+            loss="mse",
             optimizer=optimizers.Adam(lr=self.learning_rate),
         )
 
@@ -59,6 +59,7 @@ class TrainingModel:
 
         # Save the current model
         self.model.save(os.path.join(path, "trained_model.h5"))
+
 
 # class for testing the trained model
 class TestModel:

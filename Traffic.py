@@ -3,7 +3,9 @@ Traffic generation code for sumo simulation
 """
 import numpy as np
 import warnings
+
 warnings.filterwarnings("ignore")
+
 
 class TrafficGenerator:
     def __init__(self, max_steps, n_cars_generated):
@@ -17,7 +19,11 @@ class TrafficGenerator:
         np.random.seed(seed)
 
         # car generation is as per normal distribution
-        timings = np.random.normal(round(self.n_cars_generated/2,0), round(self.n_cars_generated/6,0), self.n_cars_generated)
+        timings = np.random.normal(
+            round(self.n_cars_generated / 2, 0),
+            round(self.n_cars_generated / 6, 0),
+            self.n_cars_generated,
+        )
         timings = np.sort(timings)
 
         car_gen_steps = []

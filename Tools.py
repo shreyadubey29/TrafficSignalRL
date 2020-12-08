@@ -9,6 +9,7 @@ import configparser
 import matplotlib.pyplot as plt
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 # function to set the sumo tool
@@ -39,6 +40,7 @@ def set_sumo(gui, sumocfg_file, max_steps):
 
     return sumo_cmd
 
+
 # function to read config file
 def set_config(config_file):
     config = configparser.ConfigParser()
@@ -67,6 +69,7 @@ def set_config(config_file):
     parameters["base_model_path"] = config.get("dir", "base_model_path")
 
     return parameters
+
 
 # function to save observation plots
 def save_plot(path, data, filename, xlabel, ylabel):

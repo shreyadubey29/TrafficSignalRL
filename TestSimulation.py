@@ -6,6 +6,7 @@ import traci
 import timeit
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 """
@@ -77,7 +78,7 @@ class TestSimulation:
 
             reward = self.get_reward(old_total_wait_time, current_total_wait)
             action = self.choose_test_action(current_state)
-            
+
             if self.step_count != 0 and old_action != action:
                 self.activate_yellow_lights(old_action)
                 self.simulate(self.yellow_duration)
@@ -86,7 +87,7 @@ class TestSimulation:
             self.simulate(self.green_duration)
 
             self.wait_time_list.append(current_total_wait)
-            
+
             old_action = action
             old_total_wait_time = current_total_wait
 
@@ -96,7 +97,7 @@ class TestSimulation:
         simulation_time = round(timeit.default_timer() - start_time, 1)
 
         return simulation_time
-    
+
     def get_state(self):
 
         state = np.zeros(self.num_of_states)
@@ -158,12 +159,12 @@ class TestSimulation:
             else:
                 # cars that are crossing or have crossed the intersection are not valid
                 valid_car = False
-                
+
             if valid_car:
                 if state[car_cell] == 0:
                     state[car_cell] = 1
                 else:
-                    state[car_cell] +=1
+                    state[car_cell] += 1
 
         return state
 
@@ -177,8 +178,8 @@ class TestSimulation:
     def activate_yellow_lights(self, action):
         yellow_code = action * 2 + 1
         traci.trafficlight.setPhase("TL", yellow_code)
-        
-    # function to start green light 
+
+    # function to start green light
     def activate_green_lights(self, action):
         if action == 0:
             traci.trafficlight.setPhase("TL", NS_GREEN)
@@ -188,7 +189,7 @@ class TestSimulation:
             traci.trafficlight.setPhase("TL", EW_GREEN)
         elif action == 3:
             traci.trafficlight.setPhase("TL", EWL_GREEN)
-            
+
     # function to get number of cars waiting
     def get_queue_length(self):
         """
@@ -201,7 +202,7 @@ class TestSimulation:
 
         total_queue_length = N_lane + S_lane + W_lane + E_lane
         return total_queue_length
-    
+
     # function to simulate the enviornment on sumo
     def simulate(self, steps_todo):
         """
@@ -236,7 +237,7 @@ class TestSimulation:
 
         total_waiting_time = sum(self.waiting_times.values())
         return total_waiting_time
-    
+
     # function to take action using the trained model
     def choose_test_action(self, state):
         return np.argmax(self.Model.predict_single(state))

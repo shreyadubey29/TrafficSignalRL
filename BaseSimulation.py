@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Code for running simulation for the traffic signal by the RL agent
 """
@@ -6,6 +5,7 @@ import traci
 import timeit
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 """
@@ -28,7 +28,7 @@ EW_YELLOW = 5
 EWL_GREEN = 6
 EWL_YELLOW = 7
 
-
+# class for pre-timed base model
 class BaseSimulation:
 
     # class variables
@@ -50,6 +50,7 @@ class BaseSimulation:
         self.queue_length_list = []
         self.wait_time_list = []
 
+    # function with preset signal
     def run_signal(self, episode):
         """
         Runs the test simulation
@@ -68,7 +69,7 @@ class BaseSimulation:
 
             current_total_wait = self.collect_waiting_times()
             action = self.choose_timed_action(old_action)
-            
+
             if self.step_count != 0 and old_action != action:
                 self.activate_yellow_lights(old_action)
                 self.simulate(self.yellow_duration)
@@ -77,18 +78,20 @@ class BaseSimulation:
             self.simulate(self.green_duration)
 
             self.wait_time_list.append(current_total_wait)
-            
+
             old_action = action
 
         traci.close()
         simulation_time = round(timeit.default_timer() - start_time, 1)
 
         return simulation_time
-    
+
+    # function to start yellow light
     def activate_yellow_lights(self, action):
         yellow_code = action * 2 + 1
         traci.trafficlight.setPhase("TL", yellow_code)
 
+    # function to start green light
     def activate_green_lights(self, action):
         if action == 0:
             traci.trafficlight.setPhase("TL", NS_GREEN)
@@ -99,6 +102,7 @@ class BaseSimulation:
         elif action == 3:
             traci.trafficlight.setPhase("TL", EWL_GREEN)
 
+    # function to get the number of cars waiting
     def get_queue_length(self):
         """
         Calculate the total number of cars at speed = 0 in each incoming lane
@@ -111,6 +115,7 @@ class BaseSimulation:
         total_queue_length = N_lane + S_lane + W_lane + E_lane
         return total_queue_length
 
+    # function to simulate the environment in sumo
     def simulate(self, steps_todo):
         """
         Perform steps in sumo
@@ -125,6 +130,7 @@ class BaseSimulation:
             queue_length = self.get_queue_length()
             self.queue_length_list.append(queue_length)
 
+    # function to collect cumulative wait time
     def collect_waiting_times(self):
         """
         Get waiting time for every car on the incoming roads
@@ -144,14 +150,15 @@ class BaseSimulation:
         total_waiting_time = sum(self.waiting_times.values())
         return total_waiting_time
 
+    # function to perform action as per a cloackwise signal pattern
     def choose_timed_action(self, old_action):
         action = 0
-        
+
         if old_action == -1:
             action = 0
         elif old_action == 3:
             action = 0
         else:
             action = old_action + 1
-        
+
         return action

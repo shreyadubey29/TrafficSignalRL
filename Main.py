@@ -37,6 +37,7 @@ def main():
         print("timed signal")
         base_model()
 
+
 # function to train model
 def train_model():
     config = set_config("config_parameters.txt")
@@ -106,11 +107,13 @@ def train_model():
         "Avg queue length",
     )
 
+
 # function for epsilon value update
 def update_epsilon(epsilon, epsilon_min, epsilon_decay):
     if epsilon > epsilon_min:
         epsilon *= epsilon_decay
     return epsilon
+
 
 # function to test the trained DQN model
 def test_model():
@@ -122,7 +125,7 @@ def test_model():
 
     model = TestModel(config["num_states"], model_path)
     traffic_gen = TrafficGenerator(config["max_steps"], config["n_cars_generated"])
-    
+
     simulation = TestSimulation(
         model,
         traffic_gen,
@@ -159,20 +162,30 @@ def test_model():
         "steps",
         "Wait time",
     )
-    print("Average wait time: ", round(sum(simulation.wait_time_list)/len(simulation.wait_time_list),1))
-    print("Average quque length: ", round(sum(simulation.queue_length_list)/len(simulation.queue_length_list),1))
-    print("Average reward: ", round(sum(simulation.rewards_list)/len(simulation.rewards_list),1))
+    print(
+        "Average wait time: ",
+        round(sum(simulation.wait_time_list) / len(simulation.wait_time_list), 1),
+    )
+    print(
+        "Average quque length: ",
+        round(sum(simulation.queue_length_list) / len(simulation.queue_length_list), 1),
+    )
+    print(
+        "Average reward: ",
+        round(sum(simulation.rewards_list) / len(simulation.rewards_list), 1),
+    )
     print("Testing results saved at ", test_path)
+
 
 # test the pre-timed base model
 def base_model():
-    
+
     config = set_config("config_parameters.txt")
     sumo_cmd = set_sumo(config["gui"], config["sumocfg_file_name"], config["max_steps"])
     base_path = config["base_model_path"]
-    
+
     traffic_gen = TrafficGenerator(config["max_steps"], config["n_cars_generated"])
-    
+
     simulation = BaseSimulation(
         traffic_gen,
         sumo_cmd,
@@ -200,8 +213,15 @@ def base_model():
         "steps",
         "Wait time",
     )
-    print("Average wait time: ", round(sum(simulation.wait_time_list)/len(simulation.wait_time_list),1))
-    print("Average quque length: ", round(sum(simulation.queue_length_list)/len(simulation.queue_length_list),1))
+    print(
+        "Average wait time: ",
+        round(sum(simulation.wait_time_list) / len(simulation.wait_time_list), 1),
+    )
+    print(
+        "Average quque length: ",
+        round(sum(simulation.queue_length_list) / len(simulation.queue_length_list), 1),
+    )
     print("Testing results saved at ", base_path)
+
 
 main()
