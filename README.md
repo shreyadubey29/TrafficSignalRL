@@ -1,6 +1,9 @@
 # TrafficSignalRL
 Optimized traffic signal with the use of reinforcement learning
 
+SUMO tool should be installed in your machine before running this code. It can be installed using the below link\
+https://sumo.dlr.de/docs/Installing.html
+
 When running the Main.py file there is an option of using the appropriate mode
 
 while running from terminal use the below command
